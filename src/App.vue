@@ -1,5 +1,5 @@
 <script setup>
-import { onMounted, reactive, ref } from "vue";
+import { onMounted, reactive, ref, computed, watch } from "vue";
 
 const blocksContainer = ref(null);
 const inputStatus = ref(null);
@@ -12,43 +12,162 @@ for (let i = 1; i <= 15; i += 0.5) {
 	if (audioDatas.length === 25) break;
 }
 
-const blockData = ref([
-	{ element: null, id: "1", pitch: "0", color: "0 100% 66%" },
-	{ element: null, id: "2", pitch: "2", color: "43 100% 58%" },
-	{ element: null, id: "3", pitch: "4", color: "218 46% 55%" },
-	{ element: null, id: "4", pitch: "6", color: "48 36% 77%" },
+const allOn = ref(false);
+const userLifes = ref(5);
+const currentLevel = ref(0);
+const mode = ref("waiting");
+const userInputAnswer = ref([]);
+const blockDataObjects = reactive([
+	{
+		questionNumber: 3,
+		size: {
+			gridNumber: 2,
+			blockSize: "min(8rem, calc(45vw - 1rem))",
+			gridGap: "min(2rem, 9.5vw)",
+		},
+		data: [
+			{ element: null, id: "1", pitch: "0", color: "0 100% 66%" },
+			{ element: null, id: "2", pitch: "2", color: "43 100% 58%" },
+			{ element: null, id: "3", pitch: "4", color: "218 46% 55%" },
+			{ element: null, id: "4", pitch: "6", color: "48 36% 77%" },
+		],
+	},
+	{
+		questionNumber: 3,
+		size: {
+			gridNumber: 3,
+			blockSize: "min(8rem, calc(30vw - 1rem))",
+			gridGap: "min(1.5rem, 5vw)",
+		},
+		data: [
+			{ element: null, id: "1", pitch: "0", color: "0 100% 66%" },
+			{ element: null, id: "2", pitch: "1", color: "43 100% 58%" },
+			{ element: null, id: "3", pitch: "2", color: "218 46% 55%" },
+			{ element: null, id: "4", pitch: "3", color: "48 36% 77%" },
+			{ element: null, id: "5", pitch: "4", color: "326 40% 60%" },
+			{ element: null, id: "6", pitch: "5", color: "99 44% 59%" },
+			{ element: null, id: "7", pitch: "6", color: "260 55% 70%" },
+			{ element: null, id: "8", pitch: "7", color: "60 55% 50%" },
+			{ element: null, id: "9", pitch: "8", color: "30 45% 60%" },
+		],
+	},
+	{
+		questionNumber: 4,
+		size: {
+			gridNumber: 4,
+			blockSize: "min(8rem, calc(22.5vw - 0.9rem))",
+			gridGap: "min(1.2rem, 3vw)",
+		},
+		data: [
+			{ element: null, id: "1", pitch: "0", color: "0 100% 66%" },
+			{ element: null, id: "2", pitch: "1", color: "43 100% 58%" },
+			{ element: null, id: "3", pitch: "2", color: "218 46% 55%" },
+			{ element: null, id: "4", pitch: "3", color: "48 36% 77%" },
+			{ element: null, id: "5", pitch: "4", color: "326 40% 60%" },
+			{ element: null, id: "6", pitch: "5", color: "99 44% 59%" },
+			{ element: null, id: "7", pitch: "6", color: "260 55% 70%" },
+			{ element: null, id: "8", pitch: "7", color: "60 55% 50%" },
+			{ element: null, id: "9", pitch: "8", color: "30 45% 60%" },
+			{ element: null, id: "10", pitch: "9", color: "226 76% 60%" },
+			{ element: null, id: "11", pitch: "10", color: "97 76% 62%" },
+			{ element: null, id: "12", pitch: "11", color: "342 76% 62%" },
+			{ element: null, id: "13", pitch: "12", color: "253 81% 65%" },
+			{ element: null, id: "14", pitch: "13", color: "67 76% 62%" },
+			{ element: null, id: "15", pitch: "14", color: "300 56% 70%" },
+			{ element: null, id: "16", pitch: "15", color: "174 76% 62%" },
+		],
+	},
+	{
+		questionNumber: 5,
+		size: {
+			gridNumber: 5,
+			blockSize: "min(6rem, calc(18vw - 0.8rem))",
+			gridGap: "min(1rem, 2.6vw)",
+		},
+		data: [
+			{ element: null, id: "1", pitch: "0", color: "0 100% 66%" },
+			{ element: null, id: "2", pitch: "1", color: "43 100% 58%" },
+			{ element: null, id: "3", pitch: "2", color: "218 46% 55%" },
+			{ element: null, id: "4", pitch: "3", color: "48 36% 77%" },
+			{ element: null, id: "5", pitch: "4", color: "326 40% 60%" },
+			{ element: null, id: "6", pitch: "5", color: "99 44% 59%" },
+			{ element: null, id: "7", pitch: "6", color: "260 55% 70%" },
+			{ element: null, id: "8", pitch: "7", color: "60 55% 50%" },
+			{ element: null, id: "9", pitch: "8", color: "30 45% 60%" },
+			{ element: null, id: "10", pitch: "9", color: "226 76% 60%" },
+			{ element: null, id: "11", pitch: "10", color: "97 76% 81%" },
+			{ element: null, id: "12", pitch: "11", color: "342 76% 62%" },
+			{ element: null, id: "13", pitch: "12", color: "253 81% 65%" },
+			{ element: null, id: "14", pitch: "13", color: "67 76% 62%" },
+			{ element: null, id: "15", pitch: "14", color: "300 56% 70%" },
+			{ element: null, id: "16", pitch: "15", color: "174 76% 62%" },
+			{ element: null, id: "17", pitch: "16", color: "222 51% 67%" },
+			{ element: null, id: "18", pitch: "17", color: "36 66% 64%" },
+			{ element: null, id: "19", pitch: "18", color: "0, 70%, 55%" },
+			{ element: null, id: "20", pitch: "19", color: "118 58% 61%" },
+			{ element: null, id: "21", pitch: "20", color: "64 81% 50%" },
+			{ element: null, id: "22", pitch: "21", color: "0 81% 65%" },
+			{ element: null, id: "23", pitch: "22", color: "190 70% 44%" },
+			{ element: null, id: "24", pitch: "23", color: "74 61% 71%" },
+			{ element: null, id: "25", pitch: "24", color: "226 100% 81%" },
+		],
+	},
 ]);
+
+const currentDataIndex = ref(0);
+const currentBlockDataObject = ref(null);
+const currentBlockData = ref(null);
+currentBlockDataObject.value = blockDataObjects[currentDataIndex.value];
+currentBlockData.value = currentBlockDataObject.value.data;
 const soundSets = reactive({
 	correct: [0, 4, 8, 13],
 	wrong: [2, 6, 9, 12],
 	gameover: [4, 8, 24],
+	win: [
+		[0, 4, 8, 13],
+		[2, 6, 9, 12],
+		[4, 8, 24],
+	],
 });
 const messageBox = reactive({
 	correct: `Correct!!
 	Let's go to the next level~`,
 	wrong: `😛😛😛 You Wrong!! Try it again!! 😛😛😛`,
 	gameover: `👎👎👎 You fucked up!! Go back to your mother!! 👎👎👎`,
+	win: `🤙🤙🤙 Congratulations!! You Win this Kuso Game!!🤙🤙🤙`,
 });
-const levelQuestions = reactive([
-	"0246",
-	"04642",
-	"264062",
-	// "2123142",
-	// "31423421",
-	// "341243412",
-	// "4132412431",
-	// "13412434124",
-]);
+function getBlockDataPitchSets(currentData) {
+	return currentData.map((block) => block.pitch);
+}
+const levelQuestions = reactive([]);
+// produce questions
+produceQuestions();
+function produceQuestions() {
+	blockDataObjects.forEach((blockDataObject) => {
+		let questionNumber = blockDataObject.questionNumber;
+		let currentPitchSets = getBlockDataPitchSets(blockDataObject.data);
 
-const allOn = ref(false);
-const userLifes = ref(5);
-const currentLevel = ref(0);
-const mode = ref("waiting");
-const userInputAnswer = ref("");
+		for (let i = 0; i < questionNumber; i++) {
+			let question = getQuestion(currentPitchSets, currentLevel.value + 4);
+			levelQuestions.push(question);
+			currentLevel.value++;
+		}
+	});
+	// after produced, init data
+	currentLevel.value = 0;
+}
+function getQuestion(pitchSets, questionNumber) {
+	let result = [];
+	for (let i = 0; i < questionNumber; i++) {
+		let index = parseInt(pitchSets.length * Math.random());
+		result.push(pitchSets[index]);
+	}
+	return result;
+}
 
 const answer = ref(levelQuestions[currentLevel.value]);
-let checkAnswer = answer.value.split("");
-let questionTimer;
+const checkAnswer = ref([]);
+checkAnswer.value = [...answer.value];
 
 const Message = ref("");
 
@@ -60,26 +179,22 @@ function blockHandler(pitch) {
 }
 
 function blockPlaySound(pitch) {
-	let block = blockData.value.find((block) => block.pitch === pitch)?.element;
+	let block = currentBlockData.value.find((block) => block.pitch === pitch);
+	let blockElement = block?.element;
 	let audio = audioDatas[pitch];
 	audio.currentTime = 0;
 	audio.play();
 
-	block.classList.add("flicker");
+	blockElement.classList.add("flicker");
 	setTimeout(() => {
 		if (allOn.value) return;
-		block.classList.remove("flicker");
+		blockElement.classList.remove("flicker");
 	}, 100);
 }
 
 function getAudioObject(pitch) {
 	if (pitch === 7.5 || pitch === 10.5) return;
 	return new Audio(`https://awiclass.monoame.com/pianosound/set/${pitch}.wav`);
-}
-function getElement() {
-	blockData.value.forEach(
-		(block) => (block.element = document.querySelector(`#block${block.id}`))
-	);
 }
 
 function turnAllOn() {
@@ -96,37 +211,46 @@ function turnAllOff() {
 }
 function playSound(type) {
 	let sets = soundSets[type];
-	sets.forEach((index) => {
-		audioDatas[index].currentTime = 0;
-		audioDatas[index].play();
-	});
+	if (type === "win") {
+		let time = 0;
+		sets.forEach((setArray) => {
+			setTimeout(() => {
+				setArray.forEach((index) => {
+					audioDatas[index].currentTime = 0;
+					audioDatas[index].play();
+				});
+			}, time);
+			time += 100;
+		});
+	} else {
+		sets.forEach((index) => {
+			audioDatas[index].currentTime = 0;
+			audioDatas[index].play();
+		});
+	}
 }
 // startGame
 function showQuestion() {
 	mode.value = "showingQuestion";
-	// reset question
-	answer.value = levelQuestions[currentLevel.value];
-	checkAnswer = answer.value.split("");
 
-	let notes = answer.value.split("");
-	questionTimer = setInterval(() => {
-		let pitch = notes.shift();
-		blockPlaySound(pitch);
-		if (!notes.length) {
-			setModeToUserInputting();
-			clearInterval(questionTimer);
-		}
-	}, 400);
+	let time = 0;
+	for (let i = 0; i < answer.value.length; i++) {
+		time += 400;
+		setTimeout(() => {
+			blockPlaySound(answer.value[i]);
+		}, time);
+	}
+	setTimeout(setModeToUserInputting, time);
 }
 
 function setModeToUserInputting() {
 	mode.value = "userInputting";
-	userInputAnswer.value = "";
+	userInputAnswer.value = [];
 }
 
 function checkCrrect(pitch, block) {
 	// if wrong
-	if (pitch !== checkAnswer[0]) {
+	if (pitch !== checkAnswer.value[0]) {
 		userLifes.value--;
 		// if gameover
 		if (userLifes.value === 0) {
@@ -134,24 +258,39 @@ function checkCrrect(pitch, block) {
 			startContainer.value.classList.remove("hidden");
 		} else {
 			showMessage("wrong");
-			setTimeout(() => {
-				clean();
+			setTimeout(async () => {
+				await clean();
+				await updateAnswer();
 				showQuestion();
 			}, 2000);
 		}
 		return;
 	}
 	// if correct
-	userInputAnswer.value += checkAnswer.shift();
+	userInputAnswer.value.push(checkAnswer.value.shift());
 	// if all correct
-	if (checkAnswer.length === 0) {
+	if (checkAnswer.value.length === 0) {
 		showMessage("correct");
-		setTimeout(() => {
+		setTimeout(async () => {
 			currentLevel.value++;
+			if (currentLevel.value === levelQuestions.length) {
+				showMessage("win");
+				startContainer.value.classList.remove("hidden");
+				return;
+			}
+			userLifes.value = 5;
 			clean();
+			currentBlockDataObject.value.questionNumber--;
+			if (currentBlockDataObject.value.questionNumber === 0)
+				currentDataIndex.value++;
+			await updateAnswer();
 			showQuestion();
 		}, 2000);
 	}
+}
+function updateAnswer() {
+	answer.value = levelQuestions[currentLevel.value];
+	checkAnswer.value = [...answer.value];
 }
 
 function showMessage(correctOrWrong) {
@@ -168,37 +307,73 @@ function clean() {
 	Message.value = "";
 	turnAllOff();
 	inputStatus.value.className = "inputStatus";
-	userInputAnswer.value = "";
+	userInputAnswer.value = [];
 }
 
-function startButtonHandler(e) {
+async function startButtonHandler(e) {
+	if (userLifes.value === 0) {
+		userLifes.value = 5;
+		currentLevel.value = 0;
+		currentDataIndex.value = 0;
+		clean();
+	}
 	startContainer.value.classList.add("hidden");
-	userLifes.value = 5;
-	currentLevel.value = 0;
-	clean();
+	await updateAnswer();
 	showQuestion();
 }
 
+// Blocks slector update function
+function getElement() {
+	currentBlockData.value.forEach(
+		(block) => (block.element = document.querySelector(`#block${block.id}`))
+	);
+}
+function updateCurrentBlockData() {
+	currentBlockDataObject.value = blockDataObjects[currentDataIndex.value];
+	currentBlockData.value = currentBlockDataObject.value.data;
+}
 onMounted(() => {
 	getElement();
 });
+
+watch(
+	() => currentDataIndex.value,
+	async () => {
+		await updateCurrentBlockData();
+		console.log("currentBlockData has updated!!");
+		await getElement();
+		console.log("currentBlockData got Elements!!");
+	}
+);
 </script>
 
 <template>
 	<div class="infos">
-		<h1>Memory Blocks</h1>
+		<h1>
+			Memory <br />
+			Blocks
+		</h1>
 		<h3 class="status">Level {{ currentLevel + 1 }}</h3>
 		<h3 class="message" v-if="Message">{{ Message }}</h3>
 	</div>
 
 	<main>
-		<ul class="blocks" ref="blocksContainer">
+		<ul
+			class="blocks"
+			ref="blocksContainer"
+			:style="{
+				'--grid-number': currentBlockDataObject.size.gridNumber,
+				'--block-size': currentBlockDataObject.size.blockSize,
+				'--grid-gap': currentBlockDataObject.size.gridGap,
+			}"
+		>
 			<li
-				v-for="block in blockData"
+				v-for="(block, index) in currentBlockData"
 				class="block"
 				:style="{
 					'--block-color': block.color,
 					cursor: mode === 'userInputting' ? 'pointer' : 'not-allowed',
+					animationDelay: -index * 0.5 + 's',
 				}"
 				:id="'block' + block.id"
 				:key="block.id"
@@ -227,7 +402,9 @@ onMounted(() => {
 		</div>
 	</main>
 	<div class="start" ref="startContainer">
-		<button @click="startButtonHandler">Start</button>
+		<button @click="startButtonHandler">
+			{{ userLifes === 0 ? "ReStart" : "Start" }}
+		</button>
 	</div>
 </template>
 
@@ -236,6 +413,7 @@ $colorRed: hsl(0, 100%, 66%);
 $colorYellow: hsl(43, 100%, 58%);
 $colorBlue: hsl(218, 46%, 55%);
 $colorWhite: hsl(48, 36%, 77%);
+$colorTry: hsl(226, 100%, 61%);
 
 ul {
 	list-style: none;
@@ -245,6 +423,7 @@ ul {
 	position: fixed;
 	top: 2rem;
 	left: 2.4rem;
+	z-index: 9999;
 	h1 {
 		font-size: 2rem;
 		letter-spacing: 1px;
@@ -253,16 +432,31 @@ ul {
 	}
 	h3 {
 		font-weight: 500;
-		color: $colorRed;
+		&.status {
+			color: rgb(77, 182, 172);
+		}
+		&.message {
+			display: block;
+			position: fixed;
+			left: 50%;
+			border-radius: 5px;
+			transform: translateX(-50%);
+			text-align: center;
+			color: #fff;
+			padding: 0.24rem 0.8rem;
+			font-size: 1.2rem;
+			background-color: hsl(0 81% 50% / 0.24);
+			backdrop-filter: contrast(81%) blur(0.8rem);
+		}
 	}
 }
 main {
 	width: min-content;
 }
 .blocks {
-	--grid-number: 2;
-	--block-size: 8rem;
-	--grid-gap: 2rem;
+	--grid-number: 5;
+	--block-size: min(6rem, calc(18vw - 0.8rem));
+	--grid-gap: min(1rem, 2.6vw);
 
 	display: grid;
 	grid-template-columns: repeat(var(--grid-number), var(--block-size));
@@ -288,7 +482,7 @@ main {
 		filter: brightness(80%);
 
 		box-shadow: 0 0 24px 4px hsl(var(--block-color) / 0.14);
-		animation: shadow-animation 1.2s infinite alternate-reverse;
+		animation: shadow-animation 1.5s infinite alternate-reverse;
 
 		position: relative;
 		&::after {
@@ -296,6 +490,7 @@ main {
 			position: absolute;
 			inset: 0;
 			transition: 0.5s 0.1s;
+			box-shadow: inset 0 0 2.4em rgba(240, 240, 240, 0.24);
 		}
 		&.flicker::after {
 			transition: 0s;
@@ -344,6 +539,9 @@ main {
 	}
 	&.gameover .circle {
 		background-color: transparent;
+	}
+	&.win .circle {
+		background-color: $colorBlue;
 	}
 }
 // lifes
