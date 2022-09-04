@@ -240,7 +240,7 @@ function showQuestion() {
 			blockPlaySound(answer.value[i]);
 		}, time);
 	}
-	setTimeout(setModeToUserInputting, time);
+	setTimeout(setModeToUserInputting, time + 100);
 }
 
 function setModeToUserInputting() {
@@ -295,7 +295,7 @@ function updateAnswer() {
 
 function showMessage(correctOrWrong) {
 	inputStatus.value.classList.add(correctOrWrong);
-	mode.value = "waiting";
+	setTimeout(() => (mode.value = "waiting"), 100);
 	Message.value = messageBox[correctOrWrong];
 	setTimeout(() => {
 		turnAllOn();
@@ -370,9 +370,9 @@ watch(
 			<li
 				v-for="(block, index) in currentBlockData"
 				class="block"
+				:class="{ userInputting: mode === 'userInputting' }"
 				:style="{
 					'--block-color': block.color,
-					cursor: mode === 'userInputting' ? 'pointer' : 'not-allowed',
 					animationDelay: -index * 0.5 + 's',
 				}"
 				:id="'block' + block.id"
@@ -484,6 +484,9 @@ main {
 		box-shadow: 0 0 24px 4px hsl(var(--block-color) / 0.14);
 		animation: shadow-animation 1.5s infinite alternate-reverse;
 
+		cursor: not-allowed;
+		transition: 0.3s;
+
 		position: relative;
 		&::after {
 			content: "";
@@ -495,14 +498,20 @@ main {
 		&.flicker::after {
 			transition: 0s;
 			background-color: hsl(var(--block-color));
-			box-shadow: 0 0 24px 4px hsl(var(--block-color) / 0.44);
+			box-shadow: 0 0 24px 4px hsl(var(--block-color) / 0.5);
+		}
+	}
+	.userInputting {
+		cursor: pointer;
+		&:hover {
+			background-color: hsl(var(--block-color) / 0.14);
 		}
 	}
 }
 
 @keyframes shadow-animation {
 	100% {
-		box-shadow: 0 0 24px 4px hsl(var(--block-color) / 0.44);
+		box-shadow: 0 0 24px 4px hsl(var(--block-color) / 0.5);
 	}
 }
 
