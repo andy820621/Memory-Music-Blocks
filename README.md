@@ -1,6 +1,10 @@
-# Title
+# Memory Music Blocks
 
-This template should help get you started developing with Vue 3 in Vite.
+#### Use Vue to build this little Game, and use Vite as build tool.
+
+<img src="./cover.webp">
+
+##### Go to [Website](https://memory-music-blocks.vercel.app/) to enjoy this Kuso Game.
 
 ## Project Setup
 
