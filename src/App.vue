@@ -1,7 +1,8 @@
 <script setup>
-import { onMounted, reactive, ref, computed, watch } from "vue";
+import { reactive, ref, watch } from "vue";
 
 const blocksContainer = ref(null);
+const blockElements = ref(null);
 const inputStatus = ref(null);
 const startContainer = ref(null);
 
@@ -26,10 +27,10 @@ const blockDataObjects = reactive([
 			gridGap: "min(2rem, 9.5vw)",
 		},
 		data: [
-			{ element: null, id: "1", pitch: "0", color: "0 100% 66%" },
-			{ element: null, id: "2", pitch: "2", color: "43 100% 58%" },
-			{ element: null, id: "3", pitch: "4", color: "218 46% 55%" },
-			{ element: null, id: "4", pitch: "6", color: "48 36% 77%" },
+			{ id: "1", pitch: "0", color: "0 100% 66%" },
+			{ id: "2", pitch: "2", color: "43 100% 58%" },
+			{ id: "3", pitch: "4", color: "218 46% 55%" },
+			{ id: "4", pitch: "6", color: "48 36% 77%" },
 		],
 	},
 	{
@@ -40,15 +41,15 @@ const blockDataObjects = reactive([
 			gridGap: "min(1.5rem, 5vw)",
 		},
 		data: [
-			{ element: null, id: "1", pitch: "0", color: "0 100% 66%" },
-			{ element: null, id: "2", pitch: "1", color: "43 100% 58%" },
-			{ element: null, id: "3", pitch: "2", color: "218 46% 55%" },
-			{ element: null, id: "4", pitch: "3", color: "48 36% 77%" },
-			{ element: null, id: "5", pitch: "4", color: "326 40% 60%" },
-			{ element: null, id: "6", pitch: "5", color: "99 44% 59%" },
-			{ element: null, id: "7", pitch: "6", color: "260 55% 70%" },
-			{ element: null, id: "8", pitch: "7", color: "60 55% 50%" },
-			{ element: null, id: "9", pitch: "8", color: "30 45% 60%" },
+			{ id: "1", pitch: "0", color: "0 100% 66%" },
+			{ id: "2", pitch: "1", color: "43 100% 58%" },
+			{ id: "3", pitch: "2", color: "218 46% 55%" },
+			{ id: "4", pitch: "3", color: "48 36% 77%" },
+			{ id: "5", pitch: "4", color: "326 40% 60%" },
+			{ id: "6", pitch: "5", color: "99 44% 59%" },
+			{ id: "7", pitch: "6", color: "260 55% 70%" },
+			{ id: "8", pitch: "7", color: "60 55% 50%" },
+			{ id: "9", pitch: "8", color: "30 45% 60%" },
 		],
 	},
 	{
@@ -59,22 +60,22 @@ const blockDataObjects = reactive([
 			gridGap: "min(1.2rem, 3vw)",
 		},
 		data: [
-			{ element: null, id: "1", pitch: "0", color: "0 100% 66%" },
-			{ element: null, id: "2", pitch: "1", color: "43 100% 58%" },
-			{ element: null, id: "3", pitch: "2", color: "218 46% 55%" },
-			{ element: null, id: "4", pitch: "3", color: "48 36% 77%" },
-			{ element: null, id: "5", pitch: "4", color: "326 40% 60%" },
-			{ element: null, id: "6", pitch: "5", color: "99 44% 59%" },
-			{ element: null, id: "7", pitch: "6", color: "260 55% 70%" },
-			{ element: null, id: "8", pitch: "7", color: "60 55% 50%" },
-			{ element: null, id: "9", pitch: "8", color: "30 45% 60%" },
-			{ element: null, id: "10", pitch: "9", color: "226 76% 60%" },
-			{ element: null, id: "11", pitch: "10", color: "97 76% 62%" },
-			{ element: null, id: "12", pitch: "11", color: "342 76% 62%" },
-			{ element: null, id: "13", pitch: "12", color: "253 81% 65%" },
-			{ element: null, id: "14", pitch: "13", color: "67 76% 62%" },
-			{ element: null, id: "15", pitch: "14", color: "300 56% 70%" },
-			{ element: null, id: "16", pitch: "15", color: "174 76% 62%" },
+			{ id: "1", pitch: "0", color: "0 100% 66%" },
+			{ id: "2", pitch: "1", color: "43 100% 58%" },
+			{ id: "3", pitch: "2", color: "218 46% 55%" },
+			{ id: "4", pitch: "3", color: "48 36% 77%" },
+			{ id: "5", pitch: "4", color: "326 40% 60%" },
+			{ id: "6", pitch: "5", color: "99 44% 59%" },
+			{ id: "7", pitch: "6", color: "260 55% 70%" },
+			{ id: "8", pitch: "7", color: "60 55% 50%" },
+			{ id: "9", pitch: "8", color: "30 45% 60%" },
+			{ id: "10", pitch: "9", color: "226 76% 60%" },
+			{ id: "11", pitch: "10", color: "97 76% 62%" },
+			{ id: "12", pitch: "11", color: "342 76% 62%" },
+			{ id: "13", pitch: "12", color: "253 81% 65%" },
+			{ id: "14", pitch: "13", color: "67 76% 62%" },
+			{ id: "15", pitch: "14", color: "300 56% 70%" },
+			{ id: "16", pitch: "15", color: "174 76% 62%" },
 		],
 	},
 	{
@@ -85,31 +86,31 @@ const blockDataObjects = reactive([
 			gridGap: "min(1rem, 2.6vw)",
 		},
 		data: [
-			{ element: null, id: "1", pitch: "0", color: "0 100% 66%" },
-			{ element: null, id: "2", pitch: "1", color: "43 100% 58%" },
-			{ element: null, id: "3", pitch: "2", color: "218 46% 55%" },
-			{ element: null, id: "4", pitch: "3", color: "48 36% 77%" },
-			{ element: null, id: "5", pitch: "4", color: "326 40% 60%" },
-			{ element: null, id: "6", pitch: "5", color: "99 44% 59%" },
-			{ element: null, id: "7", pitch: "6", color: "260 55% 70%" },
-			{ element: null, id: "8", pitch: "7", color: "60 55% 50%" },
-			{ element: null, id: "9", pitch: "8", color: "30 45% 60%" },
-			{ element: null, id: "10", pitch: "9", color: "226 76% 60%" },
-			{ element: null, id: "11", pitch: "10", color: "97 76% 81%" },
-			{ element: null, id: "12", pitch: "11", color: "342 76% 62%" },
-			{ element: null, id: "13", pitch: "12", color: "253 81% 65%" },
-			{ element: null, id: "14", pitch: "13", color: "67 76% 62%" },
-			{ element: null, id: "15", pitch: "14", color: "300 56% 70%" },
-			{ element: null, id: "16", pitch: "15", color: "174 76% 62%" },
-			{ element: null, id: "17", pitch: "16", color: "222 51% 67%" },
-			{ element: null, id: "18", pitch: "17", color: "36 66% 64%" },
-			{ element: null, id: "19", pitch: "18", color: "0, 70%, 55%" },
-			{ element: null, id: "20", pitch: "19", color: "118 58% 61%" },
-			{ element: null, id: "21", pitch: "20", color: "64 81% 50%" },
-			{ element: null, id: "22", pitch: "21", color: "0 81% 65%" },
-			{ element: null, id: "23", pitch: "22", color: "190 70% 44%" },
-			{ element: null, id: "24", pitch: "23", color: "74 61% 71%" },
-			{ element: null, id: "25", pitch: "24", color: "226 100% 81%" },
+			{ id: "1", pitch: "0", color: "0 100% 66%" },
+			{ id: "2", pitch: "1", color: "43 100% 58%" },
+			{ id: "3", pitch: "2", color: "218 46% 55%" },
+			{ id: "4", pitch: "3", color: "48 36% 77%" },
+			{ id: "5", pitch: "4", color: "326 40% 60%" },
+			{ id: "6", pitch: "5", color: "99 44% 59%" },
+			{ id: "7", pitch: "6", color: "260 55% 70%" },
+			{ id: "8", pitch: "7", color: "60 55% 50%" },
+			{ id: "9", pitch: "8", color: "30 45% 60%" },
+			{ id: "10", pitch: "9", color: "226 76% 60%" },
+			{ id: "11", pitch: "10", color: "97 76% 81%" },
+			{ id: "12", pitch: "11", color: "342 76% 62%" },
+			{ id: "13", pitch: "12", color: "253 81% 65%" },
+			{ id: "14", pitch: "13", color: "67 76% 62%" },
+			{ id: "15", pitch: "14", color: "300 56% 70%" },
+			{ id: "16", pitch: "15", color: "174 76% 62%" },
+			{ id: "17", pitch: "16", color: "222 51% 67%" },
+			{ id: "18", pitch: "17", color: "36 66% 64%" },
+			{ id: "19", pitch: "18", color: "0, 70%, 55%" },
+			{ id: "20", pitch: "19", color: "118 58% 61%" },
+			{ id: "21", pitch: "20", color: "64 81% 50%" },
+			{ id: "22", pitch: "21", color: "0 81% 65%" },
+			{ id: "23", pitch: "22", color: "190 70% 44%" },
+			{ id: "24", pitch: "23", color: "74 61% 71%" },
+			{ id: "25", pitch: "24", color: "226 100% 81%" },
 		],
 	},
 ]);
@@ -136,13 +137,11 @@ const messageBox = reactive({
 	gameover: `👎👎👎 You fucked up!! Go back to your mother!! 👎👎👎`,
 	win: `🤙🤙🤙 Congratulations!! You Win this Kuso Game!!🤙🤙🤙`,
 });
-function getBlockDataPitchSets(currentData) {
-	return currentData.map((block) => block.pitch);
-}
 const levelQuestions = reactive([]);
 // produce questions
 produceQuestions();
 function produceQuestions() {
+	levelQuestions.length = 0; // ensure questions array is empty.
 	blockDataObjects.forEach((blockDataObject) => {
 		let questionNumber = blockDataObject.questionNumber;
 		let currentPitchSets = getBlockDataPitchSets(blockDataObject.data);
@@ -155,6 +154,9 @@ function produceQuestions() {
 	});
 	// after produced, init data
 	currentLevel.value = 0;
+}
+function getBlockDataPitchSets(currentData) {
+	return currentData.map((block) => block.pitch);
 }
 function getQuestion(pitchSets, questionNumber) {
 	let result = [];
@@ -179,8 +181,10 @@ function blockHandler(pitch) {
 }
 
 function blockPlaySound(pitch) {
-	let block = currentBlockData.value.find((block) => block.pitch === pitch);
-	let blockElement = block?.element;
+	let blockIndex = currentBlockData.value.findIndex(
+		(block) => block.pitch === pitch
+	);
+	let blockElement = blockElements.value[blockIndex];
 	let audio = audioDatas[pitch];
 	audio.currentTime = 0;
 	audio.play();
@@ -256,6 +260,7 @@ function checkCrrect(pitch, block) {
 		if (userLifes.value === 0) {
 			showMessage("gameover");
 			startContainer.value.classList.remove("hidden");
+			produceQuestions();
 		} else {
 			showMessage("wrong");
 			setTimeout(async () => {
@@ -319,30 +324,20 @@ async function startButtonHandler(e) {
 	}
 	startContainer.value.classList.add("hidden");
 	await updateAnswer();
-	showQuestion();
+	setTimeout(showQuestion, 100);
 }
 
-// Blocks slector update function
-function getElement() {
-	currentBlockData.value.forEach(
-		(block) => (block.element = document.querySelector(`#block${block.id}`))
-	);
-}
+// Blocks update function
 function updateCurrentBlockData() {
 	currentBlockDataObject.value = blockDataObjects[currentDataIndex.value];
 	currentBlockData.value = currentBlockDataObject.value.data;
 }
-onMounted(() => {
-	getElement();
-});
 
 watch(
 	() => currentDataIndex.value,
 	async () => {
 		await updateCurrentBlockData();
 		console.log("currentBlockData has updated!!");
-		await getElement();
-		console.log("currentBlockData got Elements!!");
 	}
 );
 </script>
@@ -378,6 +373,7 @@ watch(
 				:id="'block' + block.id"
 				:key="block.id"
 				@click="blockHandler(block.pitch)"
+				ref="blockElements"
 			></li>
 		</ul>
 
