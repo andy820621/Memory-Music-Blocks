@@ -1,5 +1,5 @@
 <script setup>
-import { reactive, ref, watch } from "vue";
+import { nextTick, reactive, ref, computed } from "vue";
 
 const blocksContainer = ref(null);
 const blockElements = ref(null);
@@ -116,10 +116,10 @@ const blockDataObjects = reactive([
 ]);
 
 const currentDataIndex = ref(0);
-const currentBlockDataObject = ref(null);
-const currentBlockData = ref(null);
-currentBlockDataObject.value = blockDataObjects[currentDataIndex.value];
-currentBlockData.value = currentBlockDataObject.value.data;
+const currentBlockDataObject = computed(
+	() => blockDataObjects[currentDataIndex.value]
+);
+const currentBlockData = computed(() => currentBlockDataObject.value.data);
 const soundSets = reactive({
 	correct: [0, 4, 8, 13],
 	wrong: [2, 6, 9, 12],
@@ -234,17 +234,19 @@ function playSound(type) {
 	}
 }
 // startGame
-function showQuestion() {
+async function showQuestion() {
 	mode.value = "showingQuestion";
 
 	let time = 0;
 	for (let i = 0; i < answer.value.length; i++) {
 		time += 400;
-		setTimeout(() => {
+		setTimeout(async () => {
 			blockPlaySound(answer.value[i]);
+			await nextTick();
 		}, time);
 	}
-	setTimeout(setModeToUserInputting, time + 100);
+	await nextTick();
+	setTimeout(setModeToUserInputting, time + 200);
 }
 
 function setModeToUserInputting() {
@@ -264,8 +266,9 @@ function checkCrrect(pitch, block) {
 		} else {
 			showMessage("wrong");
 			setTimeout(async () => {
-				await clean();
-				await updateAnswer();
+				clean();
+				updateAnswer();
+				await nextTick();
 				showQuestion();
 			}, 2000);
 		}
@@ -286,9 +289,11 @@ function checkCrrect(pitch, block) {
 			userLifes.value = 5;
 			clean();
 			currentBlockDataObject.value.questionNumber--;
-			if (currentBlockDataObject.value.questionNumber === 0)
+			if (currentBlockDataObject.value.questionNumber === 0) {
 				currentDataIndex.value++;
-			await updateAnswer();
+			}
+			await nextTick();
+			updateAnswer();
 			showQuestion();
 		}, 2000);
 	}
@@ -323,23 +328,11 @@ async function startButtonHandler(e) {
 		clean();
 	}
 	startContainer.value.classList.add("hidden");
-	await updateAnswer();
-	setTimeout(showQuestion, 100);
-}
 
-// Blocks update function
-function updateCurrentBlockData() {
-	currentBlockDataObject.value = blockDataObjects[currentDataIndex.value];
-	currentBlockData.value = currentBlockDataObject.value.data;
+	updateAnswer();
+	await nextTick();
+	setTimeout(showQuestion, 300);
 }
-
-watch(
-	() => currentDataIndex.value,
-	async () => {
-		await updateCurrentBlockData();
-		console.log("currentBlockData has updated!!");
-	}
-);
 </script>
 
 <template>
