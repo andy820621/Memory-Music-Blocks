@@ -390,6 +390,7 @@ async function startButtonHandler(e) {
 			</ul>
 		</div>
 	</main>
+
 	<div class="start" ref="startContainer">
 		<button @click="startButtonHandler">
 			{{ userLifes === 0 ? "ReStart" : "Start" }}
@@ -441,6 +442,10 @@ ul {
 }
 main {
 	width: min-content;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
 }
 .blocks {
 	--grid-number: 5;
